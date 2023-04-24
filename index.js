@@ -5,6 +5,9 @@ const flash = require("connect-flash");
 var MongoDBStore = require("connect-mongodb-session")(session);
 const http = require("http");
 
+const nodemailer = require('nodemailer');
+const sgTransport = require('nodemailer-sendgrid-transport')
+
 const cors = require('cors')
 
 require('dotenv').config()
@@ -15,6 +18,14 @@ const Pictures = require("./models/pictures")
 
 const app = express();
 const server = http.createServer(app);
+
+const options = {
+  auth: {
+    api_key: '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'
+  }
+};
+
+const transporter = nodemailer.createTransport(sgTransport(options));
 
 const socketIO = require("socket.io");
 const io = new socketIO.Server(server);
@@ -89,6 +100,62 @@ app.get("/", (req, res) => {
 app.get("/profile", (req, res) => {
   res.render("profile", { user: req.session.user || "Guest" });
 });
+
+app.post("/send-mail", (req, res) => {
+  const email = req.body.email
+
+  const mailOptions = {
+    from: 'lci2020015@iiitl.ac.in',
+    to: email,
+    subject: 'Email with PDF attachment',
+    text: 'Please find the attached PDF file',
+    attachments: [
+      {
+        filename: 'club-management-iiitl.pdf',
+        path: "./club-management-iiitl.pdf"
+      }
+    ]
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('success');
+    }
+  });
+});
+
+app.post('/contact-details', (req, res) => {
+  const {
+    name,
+    email,
+    message
+  } = req.body
+
+  const mailOptions = {
+    from: 'lci2020015@iiitl.ac.in',
+    to: "lci2020009@iiitl.ac.in",
+    subject: 'Contact Details',
+    text: `
+      ${name} (${email}) sent you a message:
+      Message:
+      ${message}
+    `,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('success');
+    }
+  });
+})
 
 app.get("/gallery", (req, res) => {
   res.render("gallery");

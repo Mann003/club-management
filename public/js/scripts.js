@@ -266,14 +266,15 @@
         var terms = $("#nterms").val();
         $.ajax({
             type: "POST",
-            url: "php/newsletterform-process.php",
+            url: "/send-mail",
             data: "email=" + email + "&terms=" + terms, 
             success: function(text) {
                 if (text == "success") {
                     nformSuccess();
                 } else {
+                    console.log(text);
                     nformError();
-                    nsubmitMSG(false, text);
+                    nsubmitMSG(false, "Error");
                 }
             }
         });
@@ -322,7 +323,7 @@
         var terms = $("#cterms").val();
         $.ajax({
             type: "POST",
-            url: "php/contactform-process.php",
+            url: "/contact-details",
             data: "name=" + name + "&email=" + email + "&message=" + message + "&terms=" + terms, 
             success: function(text) {
                 if (text == "success") {
