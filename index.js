@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const options = {
   auth: {
-    api_key: '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'
+    api_key: process.env.TWILIO_API || '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'
   }
 };
 
