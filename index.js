@@ -4,6 +4,9 @@ const session = require("express-session");
 const flash = require("connect-flash");
 var MongoDBStore = require("connect-mongodb-session")(session);
 const http = require("http");
+const cors = require('cors')
+
+require('dotenv').config()
 
 const User = require("./models/user");
 const Pictures = require("./models/pictures")
@@ -32,6 +35,8 @@ io.on("connection", (socket) => {
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 app.use(flash());
@@ -69,8 +74,8 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    server.listen("3000", () => {
-      console.log("Listening to port 3000");
+    server.listen(process.env.PORT || 3000, () => {
+      console.log(`Listening to port ${process.env.PORT}`);
     });
   })
   .catch((err) => {
