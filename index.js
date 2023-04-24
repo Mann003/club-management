@@ -5,6 +5,10 @@ const flash = require("connect-flash");
 var MongoDBStore = require("connect-mongodb-session")(session);
 const http = require("http");
 
+const cors = require('cors')
+
+require('dotenv').config()
+
 const User = require("./models/user");
 const Pictures = require("./models/pictures")
 
@@ -69,8 +73,8 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    server.listen("3000", () => {
-      console.log("Listening to port 3000");
+    server.listen(process.env.PORT || 3000, () => {
+      console.log(`Listening to port ${process.env.PORT}`);
     });
   })
   .catch((err) => {
