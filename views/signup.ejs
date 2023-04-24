@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Signup</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="css/signup.css">
+	</head>
+
+	<body>
+
+		<div class="wrapper">
+			<div class="inner">
+				<div class="image-holder">
+					<img src="/images/iiitl.jpeg" alt="" height="100%">
+				</div>
+				<form action="/signup" method="post">
+					<h3>Registration Form</h3>
+					<div class="form-group">
+						<input type="text" placeholder="First Name" class="form-control" name="firstname">
+						<input type="text" placeholder="Last Name" class="form-control" name="lastname">
+					</div>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Email Address" class="form-control" name="email">
+						<i class="zmdi zmdi-email"></i>
+					</div>
+					<div class="form-wrapper">
+						<select name="" id="" class="form-control" name="club">
+							<option value="" disabled selected>Club</option>
+							<option value="male">Estrella</option>
+							<option value="femal">AfterDark</option>
+							<option value="other">Goonj</option>
+							<option value="other">Zephyr</option>
+							<option value="other">Crotonia</option>
+							<option value="other">Utkrisht</option>
+
+						</select>
+						<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Password" class="form-control" name="password">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Confirm Password" class="form-control" name="cpassword">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<input type="submit" value="Login">
+					
+				<p class="mb-5 pb-lg-2" style="color: #393f81; margin-top: 15px;">have an account already? <a href="/login"
+					style="color: #393f81;">Login here</a></p>
+				</form>
+			</div>
+		</div>
+		
+	</body>
+</html>
