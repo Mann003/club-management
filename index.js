@@ -200,7 +200,7 @@ app.post("/send-mail", (req, res) => {
   const email = req.body.email
 
   const mailOptions = {
-    from: 'lci2020015@iiitl.ac.in',
+    from: 'satyabrat130909@gmail.com',
     to: email,
     subject: 'Email with PDF attachment',
     text: 'Please find the attached PDF file',
@@ -231,8 +231,8 @@ app.post('/contact-details', (req, res) => {
   } = req.body
 
   const mailOptions = {
-    from: 'lci2020015@iiitl.ac.in',
-    to: "lci2020009@iiitl.ac.in",
+    from: 'satyabrat130909@gmail.com',
+    to: "satyabrat130909@gmail.com",
     subject: 'Contact Details',
     text: `
       ${name} (${email}) sent you a message:
