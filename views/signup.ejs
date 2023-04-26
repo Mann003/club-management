@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -7,18 +7,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- MATERIAL DESIGN ICONIC FONT -->
-	<link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+	<!-- <link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
 	<!-- STYLE CSS -->
-	<link rel="stylesheet" href="css/signup.css">
-</head>
+	<!-- <link rel="stylesheet" href="css/signup.css">
+</head> -->
 
-<body>
+<!-- <body>
 
 	<div class="wrapper">
 		<div class="inner">
 			<div class="image-holder">
-				<img src="/images/iiitl.jpeg" alt="" height="100%">
+				<img src="/images/iiitl.jpeg" alt="" height="80%" style="vertical-align:middle;margin:55px 20px">
 			</div>
 			<form action="/signup" method="post">
 				<h3>Registration Form</h3>
@@ -53,12 +55,73 @@
 				</div>
 				<input type="submit" value="Login">
 
-				<p class="mb-5 pb-lg-2" style="color: #393f81; margin-top: 15px;">have an account already? <a
+				<p class="mb-3 pb-lg-2" style="color: #393f81; margin-top: 15px;">have an account already? <a
 						href="/login" style="color: #393f81;">Login here</a></p>
+				<div class="d-flex align-items-center justify-content-center">
+					<a href="/auth/google" class="btn btn-danger"><span class="fa fa-google"></span> SignUp with Google</a>
+				</div>
 			</form>
 		</div>
 	</div>
 
-</body>
+</body> -->
 
+<!-- </html> -->
+
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignUp</title>
+  <link rel="stylesheet" href="/css/signup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+  <img src="/images/undraw_sign_up_n6im.svg" alt="" height="400px" width="400px" style="position: relative; right: 100px; top: 70px;">
+  <div class="wrapper">
+	<h3>Registration Form</h3>
+    <form action="/signup" method="post">
+		<div class="form-group">
+			<input type="text" placeholder="First Name" class="form-control" name="firstname">
+			<input type="text" placeholder="Last Name" class="form-control" name="lastname">
+		</div>
+		<div class="form-wrapper">
+			<input type="text" placeholder="Email Address" class="form-control" name="email">
+		</div>
+		<div class="form-wrapper">
+			<select name="" id="" class="form-control" name="club">
+				<option value="" disabled selected>Club</option>
+				<option value="male">Estrella</option>
+				<option value="femal">AfterDark</option>
+				<option value="other">Goonj</option>
+				<option value="other">Zephyr</option>
+				<option value="other">Crotonia</option>
+				<option value="other">Utkrisht</option>
+
+			</select>
+			<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+		</div>
+		<div class="form-wrapper">
+			<input type="password" placeholder="Password" class="form-control" name="password">
+			<i class="zmdi zmdi-lock"></i>
+		</div>
+		<div class="form-wrapper">
+			<input type="password" placeholder="Confirm Password" class="form-control" name="cpassword">
+		</div>
+		<input type="submit" value="Signup">
+
+		<p class="mb-3 pb-lg-2" style="color: #393f81; margin-top: 15px;">have an account already? <a
+				href="/login" style="color: #393f81;">Login here</a></p>
+		<div class="d-flex align-items-center justify-content-center">
+			<a href="/auth/google" class="btn btn-danger" style="color:white"><span class="fa fa-google"></span> SignUp with Google</a>
+		</div>
+    </form>
+  </div>
+  <!-- <script src="/js/login.js"></script> -->
+</body>
 </html>

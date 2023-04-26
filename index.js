@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken');
 const session = require("express-session");
 const flash = require("connect-flash");
 var MongoDBStore = require("connect-mongodb-session")(session);
@@ -7,6 +8,7 @@ const http = require("http");
 
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport')
+const passport = require('passport');
 
 const cors = require('cors')
 
@@ -18,10 +20,10 @@ const Pictures = require("./models/pictures")
 
 const app = express();
 const server = http.createServer(app);
-
+app.use(cors())
 const options = {
   auth: {
-    api_key: process.env.TWILIO_API || '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'
+    api_key: process.env.TWILIO_API || ''
   }
 };
 
@@ -50,10 +52,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 app.use(flash());
-const MONGO_URI =
-  "mongodb+srv://lci2020015:gPR1OkYY28ZSvrcM@cluster0.9of41cg.mongodb.net/?";
 var store = new MongoDBStore({
-  uri: MONGO_URI,
+  uri: process.env.MONGO_URI,
   collection: "sessions",
 });
 
@@ -78,8 +78,13 @@ app.use(
   })
 );
 
+var userProfile;
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 mongoose
-  .connect(MONGO_URI, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -92,6 +97,69 @@ mongoose
     console.log("OH NO error");
   });
 app.use(setLocale);
+
+passport.serializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj, cb) {
+  cb(null, obj);
+});
+
+/*  Google AUTH  */
+
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/callback"
+},
+  function (accessToken, refreshToken, profile, done) {
+    userProfile = profile;
+    return done(null, userProfile);
+  }
+));
+
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function (req, res) {
+    User.findOne({ email: userProfile.emails[0].value }).then(async (user) => {
+      if (user) {
+        const database = await User.findOne({ email: userProfile.emails[0].value });
+        // console.log(databaseno)
+
+        if (!database) {
+          res.send("NO USER FOUND");
+        } else if (database.password != userProfile.id) {
+          res.send("INCORRECT PASSWORD");
+        } else {
+          req.session.isLogged = true;
+          req.session.user = database;
+          res.redirect("/profile");
+        }
+      } else {
+        const epasswd = userProfile.id;
+        const email = userProfile.emails[0].value;
+        const firstname = userProfile.name.givenName;
+        const lastname = userProfile.name.familyName;
+        const newUser = new User({
+          firstname,
+          lastname,
+          password: epasswd,
+          email
+        });
+        await newUser.save();
+        req.session.isLogged = true;
+        res.redirect("/profile");
+      }
+    });
+
+    // Successful authentication, redirect success.
+    // res.redirect('/profile');
+  });
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -157,6 +225,7 @@ app.post('/contact-details', (req, res) => {
   });
 })
 
+
 app.get("/gallery", (req, res) => {
   res.render("gallery");
 });
@@ -206,6 +275,18 @@ app.post("/login", async (req, res) => {
     res.redirect("profile");
   }
 });
+
+app.post("/loginchat", async (req, res) => {
+  var email = req.body.email;
+  const database = await User.findOne({ email: email });
+  // console.log(database)
+  const token = jwt.sign({ _id: database._id }, process.env.TOKEN_SECRET, {
+    expiresIn: 604800,
+  });
+  console.log(token)
+  res.setHeader('authorization', token);
+  return res.status(200).send(database)
+})
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
