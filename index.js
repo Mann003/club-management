@@ -5,6 +5,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 var MongoDBStore = require("connect-mongodb-session")(session);
 const http = require("http");
+const { ExpressPeerServer } = require('peer')
 
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport')
@@ -20,7 +21,13 @@ const Pictures = require("./models/pictures")
 
 const app = express();
 const server = http.createServer(app);
+
+const peerServer = ExpressPeerServer(server, {
+	debug: true,
+})
+
 app.use(cors())
+
 const options = {
   auth: {
     api_key: process.env.TWILIO_API || ''
@@ -38,6 +45,18 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
+
+  socket.on('join-room', (roomId, userId) => {
+    socket.join(roomId)
+    socket.broadcast.to(roomId).emit('user-connected', userId)
+
+    socket.on('message', (message) => {
+      io.to(roomId).emit('createMessage', message, userId)
+    })
+    socket.on('disconnect', () => {
+      socket.broadcast.to(roomId).emit('user-disconnected', userId)
+    })
+  })
 
   socket.on("chat-sent", (data) => {
     console.log(data);
@@ -112,7 +131,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "https://iiitl-clubs-chat-server-production.up.railway.app/auth/google/callback"
+  callbackURL: "http://localhost:3000/auth/google/callback"
 },
   function (accessToken, refreshToken, profile, done) {
     userProfile = profile;
@@ -161,9 +180,17 @@ app.get('/auth/google/callback',
     // res.redirect('/profile');
   });
 
+
+app.use('/peerjs', peerServer)
+
+
 app.get("/", (req, res) => {
   res.render("home");
 });
+
+app.get('/chat/:room', (req, res) => {
+  res.render('room', { roomId: req.params.room })
+})
 
 app.get("/profile", (req, res) => {
   res.render("profile", { user: req.session.user || "Guest" });
