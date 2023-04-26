@@ -112,7 +112,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://https://iiitl-clubs-chat-server-production.up.railway.app/auth/google/callback"
+  callbackURL: "https://iiitl-clubs-chat-server-production.up.railway.app/auth/google/callback"
 },
   function (accessToken, refreshToken, profile, done) {
     userProfile = profile;
